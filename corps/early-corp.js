@@ -1,7 +1,7 @@
 /** @param {NS} ns **/
 export async function main(ns) {
 	ns.disableLog("ALL");
-
+	const CorpApi = ns.corporation
 	const analyzefile = "/analyze-corp.txt";
 	const corp = "corp";
 	const all_divisions = ["Software", "Agriculture", "Fishing", "Chemical", "Tobacco", "Food"]
@@ -21,7 +21,7 @@ export async function main(ns) {
 
 
 	await getCorp();
-	let round = ns.corporation.getInvestmentOffer().round - 1;
+	let round = CorpApi.getInvestmentOffer().round - 1;
 
 	await prep()
 	await party()
@@ -34,75 +34,75 @@ export async function main(ns) {
 
 	async function waitState(state, times = 1, onpoint = false) {
 		for (let i = 0; i < times; i++) {
-			while (ns.corporation.getCorporation().state != state) { await ns.sleep(11); }
+			while (CorpApi.getCorporation().state != state) { await ns.sleep(11); }
 			if (onpoint) {
-				while (ns.corporation.getCorporation().state == state) { await ns.sleep(11); }
+				while (CorpApi.getCorporation().state == state) { await ns.sleep(11); }
 			}
 		}
 	}
 	async function prep() {
 		//divisions
-		while (ns.corporation.getCorporation(corp).divisions.length < division_goals[round]) {
-			let name = all_divisions[ns.corporation.getCorporation(corp).divisions.length]
-			ns.corporation.expandIndustry(name, name);
+		while (CorpApi.getCorporation(corp).divisions.length < division_goals[round]) {
+			let name = all_divisions[CorpApi.getCorporation(corp).divisions.length]
+			CorpApi.expandIndustry(name, name);
 
 		}
 		//upgrades && unlocks
-		while (ns.corporation.getUpgradeLevel("Smart Storage") < smart_goals[round]) { await ns.corporation.levelUpgrade("Smart Storage"); }
-		while (ns.corporation.getUpgradeLevel("Project Insight") < project_goals[round]) { await ns.corporation.levelUpgrade("Project Insight") }
-		while (ns.corporation.getUpgradeLevel("Neural Accelerators") < project_goals[round]) { await ns.corporation.levelUpgrade("Neural Accelerators") }
-		while (ns.corporation.getUpgradeLevel("Nuoptimal Nootropic Injector Implants") < project_goals[round]) { await ns.corporation.levelUpgrade("Nuoptimal Nootropic Injector Implants") }
-		while (ns.corporation.getUpgradeLevel("FocusWires") < project_goals[round]) { await ns.corporation.levelUpgrade("FocusWires") }
-		while (ns.corporation.getUpgradeLevel("Speech Processor Implants") < speech_goals[round]) { await ns.corporation.levelUpgrade("Speech Processor Implants"); }
-		while (ns.corporation.getUpgradeLevel("DreamSense") < dream_goals[round]) { await ns.corporation.levelUpgrade("DreamSense"); }
-		while (ns.corporation.getUpgradeLevel("ABC SalesBots") < abc_goals[round]) { await ns.corporation.levelUpgrade("ABC SalesBots"); }
+		while (CorpApi.getUpgradeLevel("Smart Storage") < smart_goals[round]) { await CorpApi.levelUpgrade("Smart Storage"); }
+		while (CorpApi.getUpgradeLevel("Project Insight") < project_goals[round]) { await CorpApi.levelUpgrade("Project Insight") }
+		while (CorpApi.getUpgradeLevel("Neural Accelerators") < project_goals[round]) { await CorpApi.levelUpgrade("Neural Accelerators") }
+		while (CorpApi.getUpgradeLevel("Nuoptimal Nootropic Injector Implants") < project_goals[round]) { await CorpApi.levelUpgrade("Nuoptimal Nootropic Injector Implants") }
+		while (CorpApi.getUpgradeLevel("FocusWires") < project_goals[round]) { await CorpApi.levelUpgrade("FocusWires") }
+		while (CorpApi.getUpgradeLevel("Speech Processor Implants") < speech_goals[round]) { await CorpApi.levelUpgrade("Speech Processor Implants"); }
+		while (CorpApi.getUpgradeLevel("DreamSense") < dream_goals[round]) { await CorpApi.levelUpgrade("DreamSense"); }
+		while (CorpApi.getUpgradeLevel("ABC SalesBots") < abc_goals[round]) { await CorpApi.levelUpgrade("ABC SalesBots"); }
 
 		//prep each division & city
-		for (const division of ns.corporation.getCorporation().divisions) {
+		for (const division of CorpApi.getCorporation().divisions) {
 			//expand to all cities in all divisions
-			while (ns.corporation.getDivision(division.name).cities.length < cities.length) {
-				for (let city of cities) { if (!ns.corporation.getDivision(division.name).cities.includes(city)) { await ns.corporation.expandCity(division.name, city); } }
+			while (CorpApi.getDivision(division.name).cities.length < cities.length) {
+				for (let city of cities) { if (!CorpApi.getDivision(division.name).cities.includes(city)) { await CorpApi.expandCity(division.name, city); } }
 
 			}
 			//buy some ads 
-			while (ns.corporation.getHireAdVertCount(division.name) < adv_goals[round]) { await ns.corporation.hireAdVert(division.name); }
+			while (CorpApi.getHireAdVertCount(division.name) < adv_goals[round]) { await CorpApi.hireAdVert(division.name); }
 			//buy Warehouses
 			for (let city of cities) {
-				if (ns.corporation.hasWarehouse(division.name, city) == false) { await ns.corporation.purchaseWarehouse(division.name, city); }
+				if (CorpApi.hasWarehouse(division.name, city) == false) { await CorpApi.purchaseWarehouse(division.name, city); }
 			}
 			//prep each city to goal
 			for (let city of cities) {
 				//upgrade Warehouses to current goal
-				while (ns.corporation.getWarehouse(division.name, city).level < storage_goals[round]) { await ns.corporation.upgradeWarehouse(division.name, city); await ns.sleep(1) }
+				while (CorpApi.getWarehouse(division.name, city).level < storage_goals[round]) { await CorpApi.upgradeWarehouse(division.name, city); await ns.sleep(1) }
 				//upgrade Office size to goal
-				while (ns.corporation.getOffice(division.name, city).size < employee_goals[round]) { ns.corporation.upgradeOfficeSize(division.name, city, 3); }
+				while (CorpApi.getOffice(division.name, city).size < employee_goals[round]) { CorpApi.upgradeOfficeSize(division.name, city, 3); }
 				//hire to max
-				while (ns.corporation.getOffice(division.name, city).employees.length < ns.corporation.getOffice(division.name, city).size) { await ns.corporation.hireEmployee(division.name, city); }
+				while (CorpApi.getOffice(division.name, city).employees.length < CorpApi.getOffice(division.name, city).size) { await CorpApi.hireEmployee(division.name, city); }
 
 				//make sure we have mats for qlt update later
 				if (division.name == main_division) {
-					ns.corporation.buyMaterial(division.name, city, "Energy", 0.01)
-					ns.corporation.buyMaterial(division.name, city, "Hardware", 0.01)
+					CorpApi.buyMaterial(division.name, city, "Energy", 0.01)
+					CorpApi.buyMaterial(division.name, city, "Hardware", 0.01)
 				}
 			}
 		}
 	}
 	async function party() {
 
-		for (const division of ns.corporation.getCorporation().divisions) {
+		for (const division of CorpApi.getCorporation().divisions) {
 			for (let city of cities) {
-				await ns.corporation.setAutoJobAssignment(division.name, city, "Business", 0);
-				await ns.corporation.setAutoJobAssignment(division.name, city, "Operations", 0);
-				await ns.corporation.setAutoJobAssignment(division.name, city, "Engineer", 0);
-				await ns.corporation.setAutoJobAssignment(division.name, city, "Management", 0);
-				await ns.corporation.setAutoJobAssignment(division.name, city, "Research & Development", ns.corporation.getOffice(division.name, city).employees.length);
+				await CorpApi.setAutoJobAssignment(division.name, city, "Business", 0);
+				await CorpApi.setAutoJobAssignment(division.name, city, "Operations", 0);
+				await CorpApi.setAutoJobAssignment(division.name, city, "Engineer", 0);
+				await CorpApi.setAutoJobAssignment(division.name, city, "Management", 0);
+				await CorpApi.setAutoJobAssignment(division.name, city, "Research & Development", CorpApi.getOffice(division.name, city).employees.length);
 			}
 
 		}
 		let done = 0;
-		while (done < ns.corporation.getCorporation().divisions.length) {
+		while (done < CorpApi.getCorporation().divisions.length) {
 			done = 0;
-			for (const division of ns.corporation.getCorporation().divisions) {
+			for (const division of CorpApi.getCorporation().divisions) {
 				let d_mor = 0;
 				let d_ene = 0;
 				let d_hap = 0;
@@ -110,16 +110,16 @@ export async function main(ns) {
 					let tmorale = 0;
 					let tenergy = 0;
 					let thappiness = 0;
-					ns.corporation.getOffice(division.name, city).employees.forEach(x => tmorale += ns.corporation.getEmployee(division.name, city, x).mor);
-					ns.corporation.getOffice(division.name, city).employees.forEach(x => tenergy += ns.corporation.getEmployee(division.name, city, x).ene);
-					ns.corporation.getOffice(division.name, city).employees.forEach(x => thappiness += ns.corporation.getEmployee(division.name, city, x).hap);
-					tmorale = tmorale / ns.corporation.getOffice(division.name, city).employees.length;
-					tenergy = tenergy / ns.corporation.getOffice(division.name, city).employees.length;
-					thappiness = thappiness / ns.corporation.getOffice(division.name, city).employees.length;
+					CorpApi.getOffice(division.name, city).employees.forEach(x => tmorale += CorpApi.getEmployee(division.name, city, x).mor);
+					CorpApi.getOffice(division.name, city).employees.forEach(x => tenergy += CorpApi.getEmployee(division.name, city, x).ene);
+					CorpApi.getOffice(division.name, city).employees.forEach(x => thappiness += CorpApi.getEmployee(division.name, city, x).hap);
+					tmorale = tmorale / CorpApi.getOffice(division.name, city).employees.length;
+					tenergy = tenergy / CorpApi.getOffice(division.name, city).employees.length;
+					thappiness = thappiness / CorpApi.getOffice(division.name, city).employees.length;
 					let party = 3e6 * (round + 1);
 					tmorale > 99.8 && thappiness > 99.8 ? party = 1e5 : null;
-					tmorale < 100 || thappiness < 100 ? ns.corporation.throwParty(division.name, city, party) : null;
-					tenergy < 100 ? ns.corporation.buyCoffee(division.name, city) : null;
+					tmorale < 100 || thappiness < 100 ? CorpApi.throwParty(division.name, city, party) : null;
+					tenergy < 100 ? CorpApi.buyCoffee(division.name, city) : null;
 
 					tmorale > 99.9 ? d_mor += 1 : null;
 					tenergy > 99.9 ? d_ene += 1 : null;
@@ -132,57 +132,57 @@ export async function main(ns) {
 	}
 	async function takeOffer() {
 		//we buy a ton of cores to sell them later the cores we produce set the quality
-		for (const division of ns.corporation.getCorporation().divisions) {
+		for (const division of CorpApi.getCorporation().divisions) {
 			for (let city of cities) {
-				await ns.corporation.setAutoJobAssignment(division.name, city, "Research & Development", 0);
+				await CorpApi.setAutoJobAssignment(division.name, city, "Research & Development", 0);
 				//we need engineers to produce and the more the higher the qlt gained 
-				await ns.corporation.setAutoJobAssignment(division.name, city, "Engineer", ns.corporation.getOffice(division.name, city).employees.length);
+				await CorpApi.setAutoJobAssignment(division.name, city, "Engineer", CorpApi.getOffice(division.name, city).employees.length);
 				//we leave a bit of space for so we can actually produce high qlt cores
-				const amt = ns.corporation.getWarehouse(division.name, city).size - ns.corporation.getWarehouse(division.name, city).sizeUsed - 5;
-				ns.corporation.buyMaterial(division.name, city, "AI Cores", amt);
+				const amt = CorpApi.getWarehouse(division.name, city).size - CorpApi.getWarehouse(division.name, city).sizeUsed - 5;
+				CorpApi.buyMaterial(division.name, city, "AI Cores", amt);
 			}
 		}
 		//wait for warehouse to fill
-		while (ns.corporation.getWarehouse(main_division, cities[0]).sizeUsed < ns.corporation.getWarehouse(main_division, cities[0]).size - 5) { await ns.sleep(100) }
+		while (CorpApi.getWarehouse(main_division, cities[0]).sizeUsed < CorpApi.getWarehouse(main_division, cities[0]).size - 5) { await ns.sleep(100) }
 		//reset buys to 0
-		for (const division of ns.corporation.getCorporation().divisions) { for (let city of cities) { ns.corporation.buyMaterial(division.name, city, "AI Cores", 0) } }
+		for (const division of CorpApi.getCorporation().divisions) { for (let city of cities) { CorpApi.buyMaterial(division.name, city, "AI Cores", 0) } }
 		//set employees for fraud
-		for (const division of ns.corporation.getCorporation().divisions) {
+		for (const division of CorpApi.getCorporation().divisions) {
 			for (let city of cities) {
 
-				await ns.corporation.setAutoJobAssignment(division.name, city, "Research & Development", 0);
-				await ns.corporation.setAutoJobAssignment(division.name, city, "Operations", 0);
-				await ns.corporation.setAutoJobAssignment(division.name, city, "Engineer", 0);
-				await ns.corporation.setAutoJobAssignment(division.name, city, "Management", 0);
-				await ns.corporation.setAutoJobAssignment(division.name, city, "Business", ns.corporation.getOffice(division.name, city).employees.length);
+				await CorpApi.setAutoJobAssignment(division.name, city, "Research & Development", 0);
+				await CorpApi.setAutoJobAssignment(division.name, city, "Operations", 0);
+				await CorpApi.setAutoJobAssignment(division.name, city, "Engineer", 0);
+				await CorpApi.setAutoJobAssignment(division.name, city, "Management", 0);
+				await CorpApi.setAutoJobAssignment(division.name, city, "Business", CorpApi.getOffice(division.name, city).employees.length);
 			}
 		}
 
 		await waitState("EXPORT")
 		//we make sure that we dont sell anything early :3
-		for (const division of ns.corporation.getCorporation().divisions) {
+		for (const division of CorpApi.getCorporation().divisions) {
 			for (let city of cities) {
-				ns.corporation.sellMaterial(division.name, city, prodMat, "MAX", "MP");
+				CorpApi.sellMaterial(division.name, city, prodMat, "MAX", "MP");
 			}
 		}
 		//we wait for 5 cycles so the game forgets all bad cycles and we wait for "START" to end to be sure that the Offer is at its peak
 		await waitState("START", 5, true)
 
-		const offer = ns.corporation.getInvestmentOffer().funds;
-		await ns.corporation.acceptInvestmentOffer();
+		const offer = CorpApi.getInvestmentOffer().funds;
+		await CorpApi.acceptInvestmentOffer();
 		round++
 		analyze(offer);
 	}
 	async function end() {
-		!ns.corporation.hasUnlockUpgrade("Smart Supply") && ns.corporation.getUpgradeLevelCost("Smart Supply") < ns.corporation.getCorporation().funds ? ns.corporation.unlockUpgrade("Smart Supply") : null;
+		!CorpApi.hasUnlockUpgrade("Smart Supply") && CorpApi.getUnlockUpgradeCost("Smart Supply") < CorpApi.getCorporation().funds ? CorpApi.unlockUpgrade("Smart Supply") : null;
 
-		for (const division of ns.corporation.getCorporation().divisions) {
+		for (const division of CorpApi.getCorporation().divisions) {
 			for (let city of cities) {
-				ns.corporation.setSmartSupply(division.name, city, true)
-				await ns.corporation.setAutoJobAssignment(division.name, city, "Business", 0);
-				await ns.corporation.setAutoJobAssignment(division.name, city, "Research & Development", ns.corporation.getOffice(division.name, city).employees.length / 3);
-				await ns.corporation.setAutoJobAssignment(division.name, city, "Engineer", ns.corporation.getOffice(division.name, city).employees.length / 3);
-				await ns.corporation.setAutoJobAssignment(division.name, city, "Management", ns.corporation.getOffice(division.name, city).employees.length / 3);
+				CorpApi.setSmartSupply(division.name, city, true)
+				await CorpApi.setAutoJobAssignment(division.name, city, "Business", 0);
+				await CorpApi.setAutoJobAssignment(division.name, city, "Research & Development", CorpApi.getOffice(division.name, city).employees.length / 3);
+				await CorpApi.setAutoJobAssignment(division.name, city, "Engineer", CorpApi.getOffice(division.name, city).employees.length / 3);
+				await CorpApi.setAutoJobAssignment(division.name, city, "Management", CorpApi.getOffice(division.name, city).employees.length / 3);
 
 
 			}
@@ -193,14 +193,14 @@ export async function main(ns) {
 		let player = ns.getPlayer();
 		if (!player.hasCorporation) {
 			if (player.bitNodeN == 3) {
-				ns.corporation.createCorporation(corp, false);
+				CorpApi.createCorporation(corp, false);
 			} else {
 				while (ns.getPlayer().money < 15e+10) {
 					ns.clearLog();
 					ns.print("Waiting for Money to create Corp");
 					await ns.sleep(30 * 1000);
 				}
-				ns.corporation.createCorporation(corp, true);
+				CorpApi.createCorporation(corp, true);
 			}
 		}
 	}
