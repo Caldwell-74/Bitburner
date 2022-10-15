@@ -174,7 +174,7 @@ export async function main(ns) {
 		analyze(offer);
 	}
 	async function end() {
-		!ns.corporation.hasUnlockUpgrade("Smart Supply") && ns.corporation.getUpgradeLevelCost("Smart Supply") > ns.corporation.getCorporation().funds ? ns.corporation.unlockUpgrade("Smart Supply") : null;
+		!ns.corporation.hasUnlockUpgrade("Smart Supply") && ns.corporation.getUpgradeLevelCost("Smart Supply") < ns.corporation.getCorporation().funds ? ns.corporation.unlockUpgrade("Smart Supply") : null;
 
 		for (const division of ns.corporation.getCorporation().divisions) {
 			for (let city of cities) {
