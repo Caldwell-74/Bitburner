@@ -1,7 +1,7 @@
 import { BnValData, ValData } from 'CorpValData.js';
 const CORP_FILE = 'corp.txt';
 /** 
-1.0 with alot of botched stuff still inside of it wich i might or might not redo in :P
+1.0 with alot of botched stuff still inside of it wich i might or might not redo :P
 eg. changing jobs is janky af because of the bugs that where present after the Employee changes
 
 needs CorpValData.js wich has currently DataSets for Corp Valuation 0.5-1.0
