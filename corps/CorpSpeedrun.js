@@ -741,7 +741,7 @@ export async function main(ns) {
     }
 
     async CreateCorp() {
-      if (!this.ns.getPlayer().hasCorporation) {
+      if (!this.Corp.hasCorporation()) {
         const name = Math.random().toString(16).slice(2);
         if (this.ns.getPlayer().bitNodeN == 3) {
           this.Corp.createCorporation(name, false);
