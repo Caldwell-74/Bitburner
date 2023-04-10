@@ -1,7 +1,50 @@
 import { NS, NetscriptPort } from '@ns';
 import { COLORS, CONSTANTS } from './ButtonConstants.js';
-/** @param {import("../").NS} ns */
 
+/**
+ButtonConfig {  
+  id: string;                       
+  text: string;                     text that will be displayed left of the button  
+  data: Options object;           
+  sticky?: boolean;                 button behaves like a toggle or not 
+  init?: boolean;                   initial value defaults to false
+  buttText?: [string, string];      text on button as [OFF, ON] state defaults to ["OFF", "ON"]
+}
+Options {
+  mode: 'script' | 'port' | 'file'; depending on the choice here the corresponding Param needs to be included all others will be ignored
+  script?: ScriptParams; 
+  port?: PortParams;
+  file?: FileParams;
+}
+ScriptParams {
+  fileName: string;
+  hostName?: string;                  defaults to defaultServer set in ButtonConstants
+  threads?: number;                   deafults to defaultThreads set in ButtonConstants 
+  args?: [];                        
+  autoLaunch?: number;                if set sticky is true it will relaunch the script that often in ms
+}
+PortParams {
+  portNum: number | 'prompt' | 'ns.pid';            "prompt" will ask everytime it runs for a new input
+  data?: string | number | object | [] | 'prompt';  it JSON.stringifys the input 
+}
+FileParams {
+  fileName: string | 'prompt';                      "prompt" will ask everytime it runs for a new input
+  server?: string | 'prompt';                       "prompt" will ask everytime it runs for a new input
+  data?: string | number | object | [] | 'prompt';  it JSON.stringifys the input 
+  mode?: 'a' | 'w' | 'prompt';                      "prompt" will ask everytime it runs for a new input
+} 
+i included an example button that will either "light" or "hard" (depending on the ButtonConstants setting) relaunch the script
+light means it will just add new Buttons from buttonConfigs where hard means destroy all old buttons and recreate them wich is needed when you want to change the order
+ 
+
+ */
+
+
+
+
+
+
+/** @param {import("../").NS} ns */
 export async function main(ns: NS) {
   ns.disableLog('ALL');
   ns.clearLog();
