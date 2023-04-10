@@ -1,5 +1,5 @@
 import { NS, NetscriptPort } from '@ns';
-import { COLORS, CONSTANTS } from './ButtonConstant.js';
+import { COLORS, CONSTANTS } from './ButtonConstants.js';
 /** @param {import("../").NS} ns */
 
 export async function main(ns: NS) {
